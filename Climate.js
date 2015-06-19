@@ -365,11 +365,14 @@ function dataDecoding(DataConvertedGroup) {
   var tarData = new Object();
   tarData.Type = 0;
   // 0 - undefine ; 1 - DayHrMin(UTC/GMT) z ; 2 - DayHrMin(Local) / ; 3 HrMinSec(UTC/GMT) h ; 4 MonDayHrMin(UTC/GMT)
+  tarData.Year = 0;
   tarData.Month = 0;
   tarData.Day = 0;
   tarData.Hour = 0;
   tarData.Min = 0;
   tarData.Sec = 0;
+  tarData.Dates = "";
+  tarData.Times = "";
 
   //Split Time
   tStr = DataConvertedGroup.TimeConverted;
@@ -380,6 +383,7 @@ function dataDecoding(DataConvertedGroup) {
     switch (tail) {
       case 'z':
         tarData.Type = 1;
+	tarData.Year = d.getUTCFullYear();
         tarData.Month = d.getUTCMonth() + 1;
         tarData.Day = parseInt(tStr.slice(0, 2));
         tarData.Hour = parseInt(tStr.slice(2, 4));
@@ -387,6 +391,7 @@ function dataDecoding(DataConvertedGroup) {
         break;
       case '/':
         tarData.Type = 2;
+	tarData.Year = d.getFullYear();
         tarData.Month = d.getMonth() + 1;
         tarData.Day = parseInt(tStr.slice(0, 2));
         tarData.Hour = parseInt(tStr.slice(2, 4));
@@ -394,6 +399,9 @@ function dataDecoding(DataConvertedGroup) {
         break;
       case 'h':
         tarData.Type = 3;
+	tarData.Year = d.getUTCFullYear();
+	tarData.Month = d.getUTCMonth() + 1;
+	tarData.Day = d.getUTCDate();
         tarData.Hour = parseInt(tStr.slice(0, 2));
         tarData.Min = parseInt(tStr.slice(2, 4));
         tarData.Sec = parseInt(tStr.slice(4, 6));
@@ -401,6 +409,7 @@ function dataDecoding(DataConvertedGroup) {
     }
   } else if (tStr.length == 8) {
     tarData.Type = 4;
+    tarDate.Year = d.getUTCFullYear();
     tarData.Month = parseInt(tStr.slice(0, 2));
     tarData.Day = parseInt(tStr.slice(2, 4));
     tarData.Hour = parseInt(tStr.slice(4, 6));
@@ -409,6 +418,9 @@ function dataDecoding(DataConvertedGroup) {
     //console.log('Unknown Data');
     //console.log(tStr);
   }
+
+  tarData.Dates = tarData.Year + '-' + tarData.Month + '-' + tarData.Day;
+  tarData.Times = tarData.Hour + ':' + tarData.Min + ':' + tarData.Sec;
 
   //Latitude
   tLat = DataConvertedGroup.latituteConverted;
